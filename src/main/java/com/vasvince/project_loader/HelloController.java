@@ -6,7 +6,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
 import javafx.beans.property.SimpleStringProperty;
 
 import java.io.IOException;
@@ -17,10 +16,10 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class HelloController {
+import static com.vasvince.project_loader.enums.LoaderEnums.CLOUD_SOURCE;
+import static com.vasvince.project_loader.enums.LoaderEnums.LOCAL_SOURCE;
 
-    @FXML private TextField pathField1;
-    @FXML private TextField pathField2;
+public class HelloController {
 
     @FXML private TableView<FileEntry> filesTable1;
     @FXML private TableColumn<FileEntry, String> nameCol1;
@@ -48,14 +47,12 @@ public class HelloController {
         modifiedCol2.setCellValueFactory(c -> c.getValue().modifiedProperty());
     }
 
-    public void loadPaths(String path1, String path2) {
-        pathField1.setText(path1);
-        pathField2.setText(path2);
-        loadTo(filesTable1, statusLabel1, path1);
-        loadTo(filesTable2, statusLabel2, path2);
+    public void loadPaths(String localPath, String cloudPath) {
+        loadTo(filesTable1, statusLabel1, localPath, LOCAL_SOURCE);
+        loadTo(filesTable2, statusLabel2, cloudPath, CLOUD_SOURCE);
     }
 
-    private void loadTo(TableView<FileEntry> table, Label status, String pathStr) {
+    private void loadTo(TableView<FileEntry> table, Label status, String pathStr, String source) {
         Path p = Paths.get(pathStr);
         if (!Files.exists(p) || !Files.isDirectory(p)) {
             status.setText("Invalid directory: " + pathStr);
@@ -82,7 +79,7 @@ public class HelloController {
 
             ObservableList<FileEntry> obs = FXCollections.observableArrayList(list);
             table.setItems(obs);
-            status.setText("Listing: " + pathStr);
+            status.setText(source);
         } catch (IOException e) {
             status.setText("Error reading directory: " + e.getMessage());
             table.setItems(FXCollections.observableArrayList());
