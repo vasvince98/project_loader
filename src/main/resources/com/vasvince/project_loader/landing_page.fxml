@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Priority?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox alignment="CENTER" spacing="6.0" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.vasvince.project_loader.HelloController">
+    <padding>
+        <Insets bottom="8.0" left="8.0" right="8.0" top="8.0"/>
+    </padding>
+
+    <HBox spacing="6.0">
+        <children>
+            <TextField fx:id="pathField1" promptText="Path 1" HBox.hgrow="ALWAYS"/>
+            <TextField fx:id="pathField2" promptText="Path 2" HBox.hgrow="ALWAYS"/>
+        </children>
+    </HBox>
+
+    <SplitPane dividerPositions="0.5" prefHeight="420.0" prefWidth="780.0">
+        <items>
+            <VBox spacing="6.0" VBox.vgrow="ALWAYS">
+                <children>
+                    <Label fx:id="statusLabel1" text="Left"/>
+                    <TableView fx:id="filesTable1" VBox.vgrow="ALWAYS">
+                        <columns>
+                            <TableColumn fx:id="nameCol1" text="Name" prefWidth="380.0"/>
+                            <TableColumn fx:id="sizeCol1" text="Size" prefWidth="120.0"/>
+                            <TableColumn fx:id="modifiedCol1" text="Modified" prefWidth="200.0"/>
+                        </columns>
+                    </TableView>
+                </children>
+            </VBox>
+
+            <VBox spacing="6.0" VBox.vgrow="ALWAYS">
+                <children>
+                    <Label fx:id="statusLabel2" text="Right"/>
+                    <TableView fx:id="filesTable2" VBox.vgrow="ALWAYS">
+                        <columns>
+                            <TableColumn fx:id="nameCol2" text="Name" prefWidth="380.0"/>
+                            <TableColumn fx:id="sizeCol2" text="Size" prefWidth="120.0"/>
+                            <TableColumn fx:id="modifiedCol2" text="Modified" prefWidth="200.0"/>
+                        </columns>
+                    </TableView>
+                </children>
+            </VBox>
+        </items>
+    </SplitPane>
+</VBox>
