@@ -10,7 +10,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Instant;
 import java.util.Collection;
-import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class LocalLoader extends LoaderImpl<FileEntry> {
 
@@ -28,20 +28,21 @@ public class LocalLoader extends LoaderImpl<FileEntry> {
 
     @Override
     protected Collection<FileEntry> getProjectList() throws IOException {
-        return Files.list(path)
-                .map(pth -> {
-                    try {
-                        String name = pth.getFileName().toString();
-                        boolean dir = Files.isDirectory(pth);
-                        long size = dir ? 0L : Files.size(pth);
-                        String sizeStr = dir ? "<DIR>" : humanReadableByteCount(size);
-                        String mod = fmt.format(Instant.ofEpochMilli(Files.getLastModifiedTime(pth).toMillis()));
-                        return new FileEntry(name, sizeStr, mod);
-                    } catch (IOException e) {
-                        return new FileEntry(pth.getFileName().toString(), "?", "?");
-                    }
-                })
-                .sorted((a, b) -> a.getName().compareToIgnoreCase(b.getName()))
-                .toList();
+        try (Stream<Path> stream = Files.list(path)) {
+            return stream.map(pth -> {
+                        try {
+                            String name = pth.getFileName().toString();
+                            boolean dir = Files.isDirectory(pth);
+                            long size = dir ? 0L : Files.size(pth);
+                            String sizeStr = dir ? "<DIR>" : humanReadableByteCount(size);
+                            String mod = fmt.format(Instant.ofEpochMilli(Files.getLastModifiedTime(pth).toMillis()));
+                            return new FileEntry(name, sizeStr, mod);
+                        } catch (IOException e) {
+                            return new FileEntry(pth.getFileName().toString(), "?", "?");
+                        }
+                    })
+                    .sorted((a, b) -> a.getName().compareToIgnoreCase(b.getName()))
+                    .toList();
+        }
     }
 }

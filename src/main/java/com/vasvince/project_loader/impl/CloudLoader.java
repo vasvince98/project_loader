@@ -29,11 +29,7 @@ public class CloudLoader extends LoaderImpl<File> {
     @Override
     protected Collection<FileEntry> getProjectList() throws IOException {
         List<File> files;
-        try {
-            files = driveService.getFilesFromDrive();
-        } catch (GeneralSecurityException e) {
-            throw new IOException(e);
-        }
+        files = driveService.getFilesFromDrive();
         return convert(files);
     }
 

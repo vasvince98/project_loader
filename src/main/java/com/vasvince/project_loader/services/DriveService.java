@@ -28,6 +28,21 @@ public class DriveService {
 
     private static final Logger logger = LoggerFactory.getLogger(DriveService.class);
 
+    private final NetHttpTransport httpTransport;
+    private final Drive service;
+
+    public DriveService() {
+        try {
+            this.httpTransport = GoogleNetHttpTransport.newTrustedTransport();
+            this.service = new Drive.Builder(httpTransport, JSON_FACTORY, getCredentials(httpTransport))
+                    .setApplicationName(APPLICATION_NAME)
+                    .build();
+        } catch (GeneralSecurityException | IOException e) {
+            //TODO implement proper error handling
+            throw new RuntimeException(e);
+        }
+    }
+
     /**
      * Creates an authorized Credential object.
      *
@@ -55,15 +70,11 @@ public class DriveService {
         return new AuthorizationCodeInstalledApp(flow, receiver).authorize("user");
     }
 
-    public List<File> getFilesFromDrive() throws IOException, GeneralSecurityException {
-        // Build a new authorized API client service.
-        final NetHttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();
-        Drive service = new Drive.Builder(httpTransport, JSON_FACTORY, getCredentials(httpTransport))
-                .setApplicationName(APPLICATION_NAME)
-                .build();
-
+    public List<File> getFilesFromDrive() throws IOException {
+        //todo make it dynamic
+        String projectDriveId = getFolderId("project_loader");
         FileList result = service.files().list()
-                .setQ("'" + "1tSNGm-hpXY132p_WuSgXdcer8A3x3fU5" + "' in parents and trashed=false")
+                .setQ("'" + projectDriveId + "' in parents and trashed=false")
                 .setFields("files(id, name, mimeType)")
                 .execute();
 
@@ -71,12 +82,22 @@ public class DriveService {
         if (files == null || files.isEmpty()) {
             logger.warn("No projects found in provided drive path");
         } else {
-            logger.info("Files:");
+            logger.info("Cloud projects:");
             for (File file : files) {
                 logger.info("Name: {}, Id: {}", file.getName(), file.getId());
             }
         }
         return files;
+    }
+
+    private String getFolderId(String folderName) throws IOException {
+        FileList result = service.files().list()
+                .setQ("mimeType='application/vnd.google-apps.folder' "
+                        + "and name='" + folderName + "' "
+                        + "and trashed=false")
+                .setFields("files(id, name)")
+                .execute();
+        return result.getFiles().get(0).getId();
     }
 
 }

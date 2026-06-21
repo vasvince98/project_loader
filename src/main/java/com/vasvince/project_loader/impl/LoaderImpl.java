@@ -30,7 +30,6 @@ public abstract class LoaderImpl<T> implements Loader {
 
     @Override
     public void loadTo(TableView<FileEntry> table, Label status, String source) {
-        logger.info("Loading");
         validate(table, status);
         Collection<FileEntry> list;
         try {
