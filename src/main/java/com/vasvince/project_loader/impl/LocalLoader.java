@@ -29,12 +29,22 @@ public class LocalLoader extends LoaderImpl<FileEntry> {
     @Override
     protected Collection<FileEntry> getProjectList() throws IOException {
         try (Stream<Path> stream = Files.list(path)) {
-            return stream.map(pth -> {
+            return stream
+                    .filter(Files::isDirectory)
+                    .map(pth -> {
                         try {
+                            long size;
                             String name = pth.getFileName().toString();
-                            boolean dir = Files.isDirectory(pth);
-                            long size = dir ? 0L : Files.size(pth);
-                            String sizeStr = dir ? "<DIR>" : humanReadableByteCount(size);
+                            try (Stream<Path> walk = Files.walk(pth)) {
+                                size = walk.filter(Files::isRegularFile)
+                                        .mapToLong(sub -> {
+                                            try { return Files.size(sub); }
+                                            catch (IOException e) { return 0L; }
+                                        })
+                                        .sum();
+                            }
+
+                            String sizeStr = humanReadableByteCount(size);
                             String mod = fmt.format(Instant.ofEpochMilli(Files.getLastModifiedTime(pth).toMillis()));
                             return new FileEntry(name, sizeStr, mod);
                         } catch (IOException e) {
