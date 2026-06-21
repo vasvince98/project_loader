@@ -1,25 +1,31 @@
 package com.vasvince.project_loader;
 
+import com.vasvince.project_loader.impl.CloudLoader;
+import com.vasvince.project_loader.impl.LocalLoader;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.nio.file.Path;
 import java.util.List;
 
-public class HelloApplication extends Application {
+public class LoaderApplication extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/vasvince/project_loader/landing_page.fxml"));
         Parent root = loader.load();
-        HelloController controller = loader.getController();
+        LoaderController controller = loader.getController();
 
         List<String> args = getParameters().getRaw();
         String logicWorkDir = "/Users/vasvince/Music/Logic_test";
-        String path1 = args.size() >= 1 ? args.get(0) : logicWorkDir;
-        String path2 = args.size() >= 2 ? args.get(1) : logicWorkDir;
-        controller.loadPaths(path1, path2);
+
+        String localPath = args.size() >= 1 ? args.get(0) : logicWorkDir;
+        String cloudPath = args.size() >= 2 ? args.get(1) : logicWorkDir;
+
+        controller.loadPath(new LocalLoader(Path.of(localPath)));
+        controller.loadPath(new CloudLoader(Path.of(cloudPath)));
 
         stage.setTitle("File Landing");
         stage.setScene(new Scene(root, 800, 500));

@@ -6,6 +6,7 @@ module com.vasvince.project_loader {
     requires org.controlsfx.controls;
     requires com.dlsc.formsfx;
     requires org.kordamp.bootstrapfx.core;
+    requires org.slf4j;
 
     opens com.vasvince.project_loader to javafx.fxml;
     exports com.vasvince.project_loader;
