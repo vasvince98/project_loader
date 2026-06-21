@@ -90,18 +90,14 @@ public class DriveService {
         return files;
     }
 
-    public void downloadProject(Project project, Path path) {
-        try {
-            downloadFolder(project.getId(), Path.of(String.valueOf(path), project.getName()));
-        } catch (IOException e) {
-            //TODO implmenet
-            logger.error("Exception: {}", e.getMessage());
-        }
+    public void downloadProject(Project project, Path path) throws IOException {
+        var targetDir = Path.of(String.valueOf(path), project.getName());
+        logger.info("Target dir: {}", targetDir);
+        downloadFolder(project.getId(), targetDir);
     }
 
     private void downloadFolder(String folderId, Path localPath) throws IOException {
         Files.createDirectories(localPath);
-        logger.info("Target dir: {}", localPath);
 
         FileList result = service.files().list()
                 .setQ("'" + folderId + "' in parents and trashed=false")

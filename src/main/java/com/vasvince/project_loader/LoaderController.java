@@ -12,6 +12,7 @@ import javafx.scene.control.TableView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.nio.file.Path;
 
 import static com.vasvince.project_loader.enums.LoaderEnums.*;
@@ -102,12 +103,18 @@ public class LoaderController {
 
     @FXML
     private void onActionButtonClicked() {
-        Project selectedProject = null;
+        Project selectedProject;
         if (selectionSource == SelectionSource.LOCAL) {
             selectedProject = localFileTable.getSelectionModel().getSelectedItem();
         } else if (selectionSource == SelectionSource.CLOUD) {
             selectedProject = cloudFileTable.getSelectionModel().getSelectedItem();
-            cloudLoader.getDriveService().downloadProject(selectedProject, Path.of(LOGIC_WORK_DIR));
+            logger.info("Downloading project: {}...", selectedProject.getName());
+            try {
+                cloudLoader.getDriveService().downloadProject(selectedProject, Path.of(LOGIC_WORK_DIR));
+                logger.info("Successfully downloaded project: {}", selectedProject.getName());
+            } catch (IOException e) {
+                logger.error("Something went wrong during downloading project: {}", selectedProject.getName());
+            }
         }
         refreshListing();
     }
