@@ -9,10 +9,11 @@ import javafx.scene.control.TableView;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.security.GeneralSecurityException;
+import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
 
-public class CloudLoader extends LoaderImpl {
+public class CloudLoader extends LoaderImpl<File> {
 
     private final DriveService driveService = new DriveService();
 
@@ -34,6 +35,14 @@ public class CloudLoader extends LoaderImpl {
         } catch (GeneralSecurityException e) {
             throw new IOException(e);
         }
-        return convertFileToFileEntry(files);
+        return convert(files);
+    }
+
+    @Override
+    protected FileEntry convertItem(File item) {
+        return new FileEntry(item.getName(),
+                humanReadableByteCount(item.getSize() == null ? 0 : item.getSize()),
+                item.getModifiedTime() == null ? "EMPTY" : fmt.format(Instant.ofEpochMilli(item.getModifiedTime().getValue()))
+        );
     }
 }

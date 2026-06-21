@@ -7,6 +7,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
+import jdk.jshell.spi.ExecutionControl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,7 +20,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public abstract class LoaderImpl implements Loader {
+public abstract class LoaderImpl<T> implements Loader {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
     protected final DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
@@ -51,14 +52,15 @@ public abstract class LoaderImpl implements Loader {
 
     protected abstract void validate(TableView<FileEntry> table, Label status);
     protected abstract Collection<FileEntry> getProjectList() throws IOException;
-    protected Collection<FileEntry> convertFileToFileEntry(Collection<File> files) {
-        return files.stream()
-                .map(file -> new FileEntry(file.getName(),
-                        humanReadableByteCount(file.getSize() == null ? 0 : file.getSize()),
-                        fmt.format(Instant.ofEpochMilli(file.getModifiedTime() == null ? 0 : file.getModifiedTime().getValue())
-                        )
-                ))
+    protected Collection<FileEntry> convert(Collection<T> items) {
+        return items.stream()
+                .map(this::convertItem)
                 .toList();
+    }
+
+    protected FileEntry convertItem(T item) {
+        logger.warn("Function not implemented");
+        return null;
     }
 
     protected static String humanReadableByteCount(long bytes) {

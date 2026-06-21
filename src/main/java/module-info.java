@@ -15,6 +15,7 @@ module com.vasvince.project_loader {
     requires com.google.api.client.extensions.jetty.auth;
     requires com.google.api.client.extensions.java6.auth;
     requires jdk.httpserver;
+    requires jdk.jshell;
 
     opens com.vasvince.project_loader to javafx.fxml;
     exports com.vasvince.project_loader;

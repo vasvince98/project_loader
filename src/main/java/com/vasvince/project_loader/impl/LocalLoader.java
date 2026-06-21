@@ -12,7 +12,7 @@ import java.time.Instant;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-public class LocalLoader extends LoaderImpl {
+public class LocalLoader<T> extends LoaderImpl<T> {
 
     public LocalLoader(Path path) {
         super(path);
