@@ -12,7 +12,9 @@ target/
 *.iml
 *.ipr
 
+#Project
 src/main/resources/credentials.json
+tokens/
 
 ### Eclipse ###
 .apt_generated
