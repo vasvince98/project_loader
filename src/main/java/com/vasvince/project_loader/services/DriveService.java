@@ -11,14 +11,14 @@ import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.model.File;
 import com.google.api.services.drive.model.FileList;
+import com.vasvince.project_loader.Project;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.security.GeneralSecurityException;
 import java.util.List;
 
@@ -88,6 +88,39 @@ public class DriveService {
             }
         }
         return files;
+    }
+
+    public void downloadProject(Project project, Path path) {
+        try {
+            downloadFolder(project.getId(), Path.of(String.valueOf(path), project.getName()));
+        } catch (IOException e) {
+            //TODO implmenet
+            logger.error("Exception: {}", e.getMessage());
+        }
+    }
+
+    private void downloadFolder(String folderId, Path localPath) throws IOException {
+        Files.createDirectories(localPath);
+        logger.info("Target dir: {}", localPath);
+
+        FileList result = service.files().list()
+                .setQ("'" + folderId + "' in parents and trashed=false")
+                .setFields("files(id,name,mimeType)")
+                .execute();
+
+        for (File file : result.getFiles()) {
+            if ("application/vnd.google-apps.folder"
+                    .equals(file.getMimeType())) {
+                downloadFolder(file.getId(), localPath.resolve(file.getName()));
+
+            } else {
+                try (OutputStream os = new FileOutputStream(localPath.resolve(file.getName()).toFile())) {
+                    service.files()
+                            .get(file.getId())
+                            .executeMediaAndDownloadTo(os);
+                }
+            }
+        }
     }
 
     private String getFolderId(String folderName) throws IOException {

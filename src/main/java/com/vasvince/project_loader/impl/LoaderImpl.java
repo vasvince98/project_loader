@@ -1,6 +1,6 @@
 package com.vasvince.project_loader.impl;
 
-import com.vasvince.project_loader.FileEntry;
+import com.vasvince.project_loader.Project;
 import com.vasvince.project_loader.api.Loader;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -29,9 +29,9 @@ public abstract class LoaderImpl<T> implements Loader {
     }
 
     @Override
-    public void loadTo(TableView<FileEntry> table, Label status, String source) {
+    public void loadTo(TableView<Project> table, Label status, String source) {
         validate(table, status);
-        Collection<FileEntry> list;
+        Collection<Project> list;
         try {
             list = getProjectList();
         } catch (IOException e) {
@@ -39,20 +39,20 @@ public abstract class LoaderImpl<T> implements Loader {
             list = List.of();
         }
 
-        ObservableList<FileEntry> obs = FXCollections.observableArrayList(list);
+        ObservableList<Project> obs = FXCollections.observableArrayList(list);
         table.setItems(obs);
         status.setText(source);
     }
 
-    protected abstract void validate(TableView<FileEntry> table, Label status);
-    protected abstract Collection<FileEntry> getProjectList() throws IOException;
-    protected Collection<FileEntry> convert(Collection<T> items) {
+    protected abstract void validate(TableView<Project> table, Label status);
+    protected abstract Collection<Project> getProjectList() throws IOException;
+    protected Collection<Project> convert(Collection<T> items) {
         return items.stream()
                 .map(this::convertItem)
                 .toList();
     }
 
-    protected FileEntry convertItem(T item) {
+    protected Project convertItem(T item) {
         logger.warn("Function not implemented");
         return null;
     }

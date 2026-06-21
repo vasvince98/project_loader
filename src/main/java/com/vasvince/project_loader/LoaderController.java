@@ -12,6 +12,8 @@ import javafx.scene.control.TableView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.nio.file.Path;
+
 import static com.vasvince.project_loader.enums.LoaderEnums.*;
 
 public class LoaderController {
@@ -22,16 +24,16 @@ public class LoaderController {
     private CloudLoader cloudLoader;
 
 
-    @FXML private TableView<FileEntry> localFileTable;
-    @FXML private TableColumn<FileEntry, String> localNameCol;
-    @FXML private TableColumn<FileEntry, String> localSizeCol;
-    @FXML private TableColumn<FileEntry, String> localModifiedCol;
+    @FXML private TableView<Project> localFileTable;
+    @FXML private TableColumn<Project, String> localNameCol;
+    @FXML private TableColumn<Project, String> localSizeCol;
+    @FXML private TableColumn<Project, String> localModifiedCol;
     @FXML private Label localStatusLabel;
 
-    @FXML private TableView<FileEntry> cloudFileTable;
-    @FXML private TableColumn<FileEntry, String> nameCol2;
-    @FXML private TableColumn<FileEntry, String> sizeCol2;
-    @FXML private TableColumn<FileEntry, String> modifiedCol2;
+    @FXML private TableView<Project> cloudFileTable;
+    @FXML private TableColumn<Project, String> nameCol2;
+    @FXML private TableColumn<Project, String> sizeCol2;
+    @FXML private TableColumn<Project, String> modifiedCol2;
     @FXML private Label cloudStatusLabel;
 
     @FXML
@@ -95,25 +97,24 @@ public class LoaderController {
 
     @FXML
     private void onRefreshButtonClicked() {
-
-        loadPath(localLoader);
-        loadPath(cloudLoader);
+        refreshListing();
     }
 
     @FXML
     private void onActionButtonClicked() {
-        FileEntry selected = null;
+        Project selectedProject = null;
         if (selectionSource == SelectionSource.LOCAL) {
-            selected = localFileTable.getSelectionModel().getSelectedItem();
+            selectedProject = localFileTable.getSelectionModel().getSelectedItem();
         } else if (selectionSource == SelectionSource.CLOUD) {
-            selected = cloudFileTable.getSelectionModel().getSelectedItem();
+            selectedProject = cloudFileTable.getSelectionModel().getSelectedItem();
+            cloudLoader.getDriveService().downloadProject(selectedProject, Path.of(LOGIC_WORK_DIR));
         }
+        refreshListing();
+    }
 
-        if (selected != null) {
-            System.out.println(selected);
-        } else {
-            System.out.println("No selection");
-        }
+    private void refreshListing() {
+        loadPath(localLoader);
+        loadPath(cloudLoader);
     }
 
     private void loadPath(Loader loader) {

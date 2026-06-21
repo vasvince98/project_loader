@@ -1,14 +1,13 @@
 package com.vasvince.project_loader.impl;
 
 import com.google.api.services.drive.model.File;
-import com.vasvince.project_loader.FileEntry;
+import com.vasvince.project_loader.Project;
 import com.vasvince.project_loader.services.DriveService;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.security.GeneralSecurityException;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
@@ -22,22 +21,28 @@ public class CloudLoader extends LoaderImpl<File> {
     }
 
     @Override
-    protected void validate(TableView<FileEntry> table, Label status) {
+    protected void validate(TableView<Project> table, Label status) {
         //TODO implement connection validation
     }
 
     @Override
-    protected Collection<FileEntry> getProjectList() throws IOException {
+    protected Collection<Project> getProjectList() throws IOException {
         List<File> files;
         files = driveService.getFilesFromDrive();
         return convert(files);
     }
 
     @Override
-    protected FileEntry convertItem(File item) {
-        return new FileEntry(item.getName(),
+    protected Project convertItem(File item) {
+        return new Project(
+                item.getId(),
+                item.getName(),
                 humanReadableByteCount(item.getSize() == null ? 0 : item.getSize()),
                 item.getModifiedTime() == null ? "EMPTY" : fmt.format(Instant.ofEpochMilli(item.getModifiedTime().getValue()))
         );
+    }
+
+    public DriveService getDriveService() {
+        return driveService;
     }
 }

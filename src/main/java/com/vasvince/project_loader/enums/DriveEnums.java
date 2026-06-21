@@ -20,6 +20,6 @@ public final class DriveEnums {
      * If modifying these scopes, delete your previously saved tokens/ folder.
      */
     public static final List<String> SCOPES =
-            Collections.singletonList(DriveScopes.DRIVE_METADATA_READONLY);
+            Collections.singletonList(DriveScopes.DRIVE);
     public static final String CREDENTIALS_FILE_PATH = "/credentials.json";
 }
