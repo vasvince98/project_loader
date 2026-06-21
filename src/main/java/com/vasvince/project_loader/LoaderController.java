@@ -1,16 +1,16 @@
 package com.vasvince.project_loader;
 
 import com.vasvince.project_loader.api.Loader;
+import com.vasvince.project_loader.enums.SelectionSource;
 import com.vasvince.project_loader.impl.CloudLoader;
 import com.vasvince.project_loader.impl.LocalLoader;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.beans.property.SimpleStringProperty;
 
-import static com.vasvince.project_loader.enums.LoaderEnums.CLOUD_SOURCE;
-import static com.vasvince.project_loader.enums.LoaderEnums.LOCAL_SOURCE;
+import static com.vasvince.project_loader.enums.LoaderEnums.*;
 
 public class LoaderController {
 
@@ -26,6 +26,11 @@ public class LoaderController {
     @FXML private TableColumn<FileEntry, String> modifiedCol2;
     @FXML private Label statusLabel2;
 
+    @FXML
+    private Button button;
+
+    private SelectionSource selectionSource = SelectionSource.NONE;
+
 
 
     @FXML
@@ -37,6 +42,58 @@ public class LoaderController {
         nameCol2.setCellValueFactory(c -> c.getValue().nameProperty());
         sizeCol2.setCellValueFactory(c -> c.getValue().sizeProperty());
         modifiedCol2.setCellValueFactory(c -> c.getValue().modifiedProperty());
+
+        button.setText(DISABLED_BUTTON_TEXT);
+        button.setDisable(true);
+
+        localFileTable.getSelectionModel()
+                .selectedItemProperty()
+                .addListener((
+                    (observable, oldValue, newValue) -> {
+                        if (newValue != null) {
+                            cloudFileTable.getSelectionModel().clearSelection();
+                            selectionSource = SelectionSource.LOCAL;
+                            button.setText(DEACTIVATE_BUTTON_TEXT);
+                            button.setDisable(false);
+                        } else {
+                            if (cloudFileTable.getSelectionModel().getSelectedItem() == null) {
+                                selectionSource = SelectionSource.NONE;
+                                button.setDisable(true);
+                            }
+                        }
+                    }
+                    )
+                );
+
+        cloudFileTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSel, newSel) -> {
+            if (newSel != null) {
+                localFileTable.getSelectionModel().clearSelection();
+                selectionSource = SelectionSource.CLOUD;
+                button.setText(ACTIVATE_BUTTON_TEXT);
+                button.setDisable(false);
+            } else {
+                if (localFileTable.getSelectionModel().getSelectedItem() == null) {
+                    selectionSource = SelectionSource.NONE;
+                    button.setDisable(true);
+                }
+            }
+        });
+    }
+
+    @FXML
+    private void onActionButtonClicked() {
+        FileEntry selected = null;
+        if (selectionSource == SelectionSource.LOCAL) {
+            selected = localFileTable.getSelectionModel().getSelectedItem();
+        } else if (selectionSource == SelectionSource.CLOUD) {
+            selected = cloudFileTable.getSelectionModel().getSelectedItem();
+        }
+
+        if (selected != null) {
+            System.out.println(selected);
+        } else {
+            System.out.println("No selection");
+        }
     }
 
     public void loadPath(Loader loader) {

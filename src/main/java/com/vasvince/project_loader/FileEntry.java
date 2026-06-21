@@ -19,4 +19,13 @@ public class FileEntry {
     public SimpleStringProperty modifiedProperty() { return modified; }
 
     public String getName() { return name.get(); }
+
+    @Override
+    public String toString() {
+        return "FileEntry{" +
+                "name=" + name +
+                ", size=" + size +
+                ", modified=" + modified +
+                '}';
+    }
 }
