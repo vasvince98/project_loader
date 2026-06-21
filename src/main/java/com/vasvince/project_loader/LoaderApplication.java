@@ -24,8 +24,7 @@ public class LoaderApplication extends Application {
         String localPath = args.size() >= 1 ? args.get(0) : logicWorkDir;
         String cloudPath = args.size() >= 2 ? args.get(1) : logicWorkDir;
 
-        controller.loadPath(new LocalLoader(Path.of(localPath)));
-        controller.loadPath(new CloudLoader(Path.of(cloudPath)));
+        controller.initializeLoaders(new LocalLoader(Path.of(localPath)), new CloudLoader(Path.of(cloudPath)));
 
         stage.setTitle("File Landing");
         stage.setScene(new Scene(root, 800, 500));

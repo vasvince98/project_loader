@@ -14,6 +14,10 @@ import static com.vasvince.project_loader.enums.LoaderEnums.*;
 
 public class LoaderController {
 
+    private LocalLoader localLoader;
+    private CloudLoader cloudLoader;
+
+
     @FXML private TableView<FileEntry> localFileTable;
     @FXML private TableColumn<FileEntry, String> nameCol1;
     @FXML private TableColumn<FileEntry, String> sizeCol1;
@@ -27,7 +31,9 @@ public class LoaderController {
     @FXML private Label statusLabel2;
 
     @FXML
-    private Button button;
+    private Button actionButton;
+    @FXML
+    private Button refreshButton;
 
     private SelectionSource selectionSource = SelectionSource.NONE;
 
@@ -43,8 +49,8 @@ public class LoaderController {
         sizeCol2.setCellValueFactory(c -> c.getValue().sizeProperty());
         modifiedCol2.setCellValueFactory(c -> c.getValue().modifiedProperty());
 
-        button.setText(DISABLED_BUTTON_TEXT);
-        button.setDisable(true);
+        actionButton.setText(DISABLED_BUTTON_TEXT);
+        actionButton.setDisable(true);
 
         localFileTable.getSelectionModel()
                 .selectedItemProperty()
@@ -53,12 +59,12 @@ public class LoaderController {
                         if (newValue != null) {
                             cloudFileTable.getSelectionModel().clearSelection();
                             selectionSource = SelectionSource.LOCAL;
-                            button.setText(DEACTIVATE_BUTTON_TEXT);
-                            button.setDisable(false);
+                            actionButton.setText(DEACTIVATE_BUTTON_TEXT);
+                            actionButton.setDisable(false);
                         } else {
                             if (cloudFileTable.getSelectionModel().getSelectedItem() == null) {
                                 selectionSource = SelectionSource.NONE;
-                                button.setDisable(true);
+                                actionButton.setDisable(true);
                             }
                         }
                     }
@@ -69,15 +75,21 @@ public class LoaderController {
             if (newSel != null) {
                 localFileTable.getSelectionModel().clearSelection();
                 selectionSource = SelectionSource.CLOUD;
-                button.setText(ACTIVATE_BUTTON_TEXT);
-                button.setDisable(false);
+                actionButton.setText(ACTIVATE_BUTTON_TEXT);
+                actionButton.setDisable(false);
             } else {
                 if (localFileTable.getSelectionModel().getSelectedItem() == null) {
                     selectionSource = SelectionSource.NONE;
-                    button.setDisable(true);
+                    actionButton.setDisable(true);
                 }
             }
         });
+    }
+
+    @FXML
+    private void onRefreshButtonClicked() {
+        loadPath(localLoader);
+        loadPath(cloudLoader);
     }
 
     @FXML
@@ -96,7 +108,7 @@ public class LoaderController {
         }
     }
 
-    public void loadPath(Loader loader) {
+    private void loadPath(Loader loader) {
         if (loader instanceof LocalLoader localLoader) {
             localLoader.loadTo(localFileTable, statusLabel1, LOCAL_SOURCE);
         } else if (loader instanceof CloudLoader cloudLoader) {
@@ -104,5 +116,13 @@ public class LoaderController {
         } else {
             throw new IllegalStateException();
         }
+    }
+
+    public void initializeLoaders(LocalLoader localLoader, CloudLoader cloudLoader) {
+        this.localLoader = localLoader;
+        this.cloudLoader = cloudLoader;
+
+        loadPath(localLoader);
+        loadPath(cloudLoader);
     }
 }
