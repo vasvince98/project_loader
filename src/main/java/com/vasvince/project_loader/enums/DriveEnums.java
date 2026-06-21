@@ -9,7 +9,7 @@ import java.util.List;
 
 public final class DriveEnums {
 
-    public DriveEnums() {}
+    private DriveEnums() {}
 
     public static final String APPLICATION_NAME = "Google Drive API Java Quickstart";
     public static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();

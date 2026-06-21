@@ -11,6 +11,8 @@ import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.model.File;
 import com.google.api.services.drive.model.FileList;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 import java.io.FileNotFoundException;
@@ -24,14 +26,16 @@ import static com.vasvince.project_loader.enums.DriveEnums.*;
 
 public class DriveService {
 
+    private static final Logger logger = LoggerFactory.getLogger(DriveService.class);
+
     /**
      * Creates an authorized Credential object.
      *
-     * @param HTTP_TRANSPORT The network HTTP Transport.
+     * @param httpTransport The network HTTP Transport.
      * @return An authorized Credential object.
      * @throws IOException If the credentials.json file cannot be found.
      */
-    private static Credential getCredentials(final NetHttpTransport HTTP_TRANSPORT)
+    private static Credential getCredentials(final NetHttpTransport httpTransport)
             throws IOException {
         // Load client secrets.
         InputStream in = DriveService.class.getResourceAsStream(CREDENTIALS_FILE_PATH);
@@ -43,20 +47,18 @@ public class DriveService {
 
         // Build flow and trigger user authorization request.
         GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
-                HTTP_TRANSPORT, JSON_FACTORY, clientSecrets, SCOPES)
+                httpTransport, JSON_FACTORY, clientSecrets, SCOPES)
                 .setDataStoreFactory(new FileDataStoreFactory(new java.io.File(TOKENS_DIRECTORY_PATH)))
                 .setAccessType("offline")
                 .build();
         LocalServerReceiver receiver = new LocalServerReceiver.Builder().setPort(8888).build();
-        Credential credential = new AuthorizationCodeInstalledApp(flow, receiver).authorize("user");
-        //returns an authorized Credential object.
-        return credential;
+        return new AuthorizationCodeInstalledApp(flow, receiver).authorize("user");
     }
 
     public List<File> getFilesFromDrive() throws IOException, GeneralSecurityException {
         // Build a new authorized API client service.
-        final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
-        Drive service = new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
+        final NetHttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();
+        Drive service = new Drive.Builder(httpTransport, JSON_FACTORY, getCredentials(httpTransport))
                 .setApplicationName(APPLICATION_NAME)
                 .build();
 
@@ -67,11 +69,11 @@ public class DriveService {
 
         List<File> files = result.getFiles();
         if (files == null || files.isEmpty()) {
-            System.out.println("No files found.");
+            logger.warn("No projects found in provided drive path");
         } else {
-            System.out.println("Files:");
+            logger.info("Files:");
             for (File file : files) {
-                System.out.printf("%s (%s)\n", file.getName(), file.getId());
+                logger.info("Name: {}, Id: {}", file.getName(), file.getId());
             }
         }
         return files;

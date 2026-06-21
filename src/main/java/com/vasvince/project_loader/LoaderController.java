@@ -9,26 +9,30 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static com.vasvince.project_loader.enums.LoaderEnums.*;
 
 public class LoaderController {
+
+    private final Logger logger = LoggerFactory.getLogger(LoaderController.class);
 
     private LocalLoader localLoader;
     private CloudLoader cloudLoader;
 
 
     @FXML private TableView<FileEntry> localFileTable;
-    @FXML private TableColumn<FileEntry, String> nameCol1;
-    @FXML private TableColumn<FileEntry, String> sizeCol1;
-    @FXML private TableColumn<FileEntry, String> modifiedCol1;
-    @FXML private Label statusLabel1;
+    @FXML private TableColumn<FileEntry, String> localNameCol;
+    @FXML private TableColumn<FileEntry, String> localSizeCol;
+    @FXML private TableColumn<FileEntry, String> localModifiedCol;
+    @FXML private Label localStatusLabel;
 
     @FXML private TableView<FileEntry> cloudFileTable;
     @FXML private TableColumn<FileEntry, String> nameCol2;
     @FXML private TableColumn<FileEntry, String> sizeCol2;
     @FXML private TableColumn<FileEntry, String> modifiedCol2;
-    @FXML private Label statusLabel2;
+    @FXML private Label cloudStatusLabel;
 
     @FXML
     private Button actionButton;
@@ -41,9 +45,10 @@ public class LoaderController {
 
     @FXML
     public void initialize() {
-        nameCol1.setCellValueFactory(c -> c.getValue().nameProperty());
-        sizeCol1.setCellValueFactory(c -> c.getValue().sizeProperty());
-        modifiedCol1.setCellValueFactory(c -> c.getValue().modifiedProperty());
+        logger.info("Initializing landing page...");
+        localNameCol.setCellValueFactory(c -> c.getValue().nameProperty());
+        localSizeCol.setCellValueFactory(c -> c.getValue().sizeProperty());
+        localModifiedCol.setCellValueFactory(c -> c.getValue().modifiedProperty());
 
         nameCol2.setCellValueFactory(c -> c.getValue().nameProperty());
         sizeCol2.setCellValueFactory(c -> c.getValue().sizeProperty());
@@ -84,10 +89,13 @@ public class LoaderController {
                 }
             }
         });
+
+        logger.info("Landing page initialized");
     }
 
     @FXML
     private void onRefreshButtonClicked() {
+
         loadPath(localLoader);
         loadPath(cloudLoader);
     }
@@ -109,12 +117,16 @@ public class LoaderController {
     }
 
     private void loadPath(Loader loader) {
-        if (loader instanceof LocalLoader localLoader) {
-            localLoader.loadTo(localFileTable, statusLabel1, LOCAL_SOURCE);
-        } else if (loader instanceof CloudLoader cloudLoader) {
-            cloudLoader.loadTo(cloudFileTable, statusLabel1, CLOUD_SOURCE);
+        if (loader instanceof LocalLoader) {
+            logger.info("Loading local projects...");
+            localLoader.loadTo(localFileTable, localStatusLabel, LOCAL_SOURCE);
+            logger.info("Local projects are loaded");
+        } else if (loader instanceof CloudLoader) {
+            logger.info("Loading cloud projects...");
+            cloudLoader.loadTo(cloudFileTable, cloudStatusLabel, CLOUD_SOURCE);
+            logger.info("Cloud projects are loaded");
         } else {
-            throw new IllegalStateException();
+            throw new IllegalStateException("Loader should be an instance of LoaderImpl class");
         }
     }
 

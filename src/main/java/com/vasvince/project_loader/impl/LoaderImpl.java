@@ -1,24 +1,19 @@
 package com.vasvince.project_loader.impl;
 
-import com.google.api.services.drive.model.File;
 import com.vasvince.project_loader.FileEntry;
 import com.vasvince.project_loader.api.Loader;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
-import jdk.jshell.spi.ExecutionControl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public abstract class LoaderImpl<T> implements Loader {
 

@@ -20,5 +20,6 @@ module com.vasvince.project_loader {
     opens com.vasvince.project_loader to javafx.fxml;
     exports com.vasvince.project_loader;
     exports com.vasvince.project_loader.services;
+    exports com.vasvince.project_loader.impl;
     opens com.vasvince.project_loader.services to javafx.fxml;
 }

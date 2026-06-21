@@ -21,7 +21,7 @@ public class LoaderApplication extends Application {
         List<String> args = getParameters().getRaw();
         String logicWorkDir = "/Users/vasvince/Music/Logic_test";
 
-        String localPath = args.size() >= 1 ? args.get(0) : logicWorkDir;
+        String localPath = args.isEmpty() ? logicWorkDir : args.get(0);
         String cloudPath = args.size() >= 2 ? args.get(1) : logicWorkDir;
 
         controller.initializeLoaders(new LocalLoader(Path.of(localPath)), new CloudLoader(Path.of(cloudPath)));

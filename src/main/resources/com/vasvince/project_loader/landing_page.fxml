@@ -22,21 +22,21 @@
 
     <SplitPane dividerPositions="0.5" prefHeight="420.0" prefWidth="780.0">
         <VBox spacing="6.0" VBox.vgrow="ALWAYS">
-            <Label fx:id="statusLabel1" text="Left"/>
+            <Label fx:id="localStatusLabel" text="Left"/>
             <TableView fx:id="localFileTable" VBox.vgrow="ALWAYS">
                 <columns>
-                    <TableColumn fx:id="nameCol1" text="Name" prefWidth="380.0"/>
-                    <TableColumn fx:id="sizeCol1" text="Size" prefWidth="120.0"/>
-                    <TableColumn fx:id="modifiedCol1" text="Modified" prefWidth="200.0"/>
+                    <TableColumn fx:id="localNameCol" text="Name" prefWidth="280.0"/>
+                    <TableColumn fx:id="localSizeCol" text="Size" prefWidth="120.0"/>
+                    <TableColumn fx:id="localModifiedCol" text="Modified" prefWidth="200.0"/>
                 </columns>
             </TableView>
         </VBox>
 
         <VBox spacing="6.0" VBox.vgrow="ALWAYS">
-            <Label fx:id="statusLabel2" text="Right"/>
+            <Label fx:id="cloudStatusLabel" text="Right"/>
             <TableView fx:id="cloudFileTable" VBox.vgrow="ALWAYS">
                 <columns>
-                    <TableColumn fx:id="nameCol2" text="Name" prefWidth="380.0"/>
+                    <TableColumn fx:id="nameCol2" text="Name" prefWidth="280.0"/>
                     <TableColumn fx:id="sizeCol2" text="Size" prefWidth="120.0"/>
                     <TableColumn fx:id="modifiedCol2" text="Modified" prefWidth="200.0"/>
                 </columns>

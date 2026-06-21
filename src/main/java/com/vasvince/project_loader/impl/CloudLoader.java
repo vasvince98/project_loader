@@ -24,7 +24,6 @@ public class CloudLoader extends LoaderImpl<File> {
     @Override
     protected void validate(TableView<FileEntry> table, Label status) {
         //TODO implement connection validation
-        return;
     }
 
     @Override

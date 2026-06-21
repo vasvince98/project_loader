@@ -42,6 +42,6 @@ public class LocalLoader extends LoaderImpl<FileEntry> {
                     }
                 })
                 .sorted((a, b) -> a.getName().compareToIgnoreCase(b.getName()))
-                .collect(Collectors.toList());
+                .toList();
     }
 }
