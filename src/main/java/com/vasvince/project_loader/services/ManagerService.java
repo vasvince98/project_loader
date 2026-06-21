@@ -1,25 +1,41 @@
 package com.vasvince.project_loader.services;
 
+import com.vasvince.project_loader.Project;
 import com.vasvince.project_loader.api.Manager;
+import com.vasvince.project_loader.impl.CloudLoader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Objects;
+
+import static com.vasvince.project_loader.enums.LoaderEnums.LOGIC_WORK_DIR;
 
 public class ManagerService implements Manager {
 
-    private final DriveService driveService;
+    private static final Logger logger = LoggerFactory.getLogger(ManagerService.class);
 
-    public ManagerService(final DriveService driveService) {
-        Objects.requireNonNull(driveService, "driveService is null");
-        this.driveService = driveService;
+    private final CloudLoader cloudLoader;
+
+    public ManagerService(final CloudLoader cloudLoader) {
+        Objects.requireNonNull(cloudLoader, "driveService is null");
+        this.cloudLoader = cloudLoader;
     }
 
     @Override
-    public void archive() {
+    public void archive(Project project) {
 
     }
 
     @Override
-    public void downloadById(String id) {
-
+    public void download(Project project) {
+        logger.info("Downloading project: {}...", project.getName());
+        try {
+            cloudLoader.getDriveService().downloadProject(project, Path.of(LOGIC_WORK_DIR));
+            logger.info("Successfully downloaded project: {}", project.getName());
+        } catch (IOException e) {
+            logger.error("Something went wrong during downloading project: {}", project.getName());
+        }
     }
 }

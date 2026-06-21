@@ -1,9 +1,11 @@
 package com.vasvince.project_loader;
 
 import com.vasvince.project_loader.api.Loader;
+import com.vasvince.project_loader.api.Manager;
 import com.vasvince.project_loader.enums.SelectionSource;
 import com.vasvince.project_loader.impl.CloudLoader;
 import com.vasvince.project_loader.impl.LocalLoader;
+import com.vasvince.project_loader.services.ManagerService;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -44,7 +46,13 @@ public class LoaderController {
 
     private SelectionSource selectionSource = SelectionSource.NONE;
 
+    public void initializeLoaders(LocalLoader localLoader, CloudLoader cloudLoader) {
+        this.localLoader = localLoader;
+        this.cloudLoader = cloudLoader;
 
+        loadPath(localLoader);
+        loadPath(cloudLoader);
+    }
 
     @FXML
     public void initialize() {
@@ -103,18 +111,14 @@ public class LoaderController {
 
     @FXML
     private void onActionButtonClicked() {
+        Manager managerService = new ManagerService(cloudLoader);
         Project selectedProject;
         if (selectionSource == SelectionSource.LOCAL) {
             selectedProject = localFileTable.getSelectionModel().getSelectedItem();
+            managerService.archive(selectedProject);
         } else if (selectionSource == SelectionSource.CLOUD) {
             selectedProject = cloudFileTable.getSelectionModel().getSelectedItem();
-            logger.info("Downloading project: {}...", selectedProject.getName());
-            try {
-                cloudLoader.getDriveService().downloadProject(selectedProject, Path.of(LOGIC_WORK_DIR));
-                logger.info("Successfully downloaded project: {}", selectedProject.getName());
-            } catch (IOException e) {
-                logger.error("Something went wrong during downloading project: {}", selectedProject.getName());
-            }
+            managerService.download(selectedProject);
         }
         refreshListing();
     }
@@ -136,13 +140,5 @@ public class LoaderController {
         } else {
             throw new IllegalStateException("Loader should be an instance of LoaderImpl class");
         }
-    }
-
-    public void initializeLoaders(LocalLoader localLoader, CloudLoader cloudLoader) {
-        this.localLoader = localLoader;
-        this.cloudLoader = cloudLoader;
-
-        loadPath(localLoader);
-        loadPath(cloudLoader);
     }
 }
