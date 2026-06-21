@@ -1,5 +1,6 @@
 package com.vasvince.project_loader.impl;
 
+import com.google.api.services.drive.model.File;
 import com.vasvince.project_loader.FileEntry;
 import com.vasvince.project_loader.api.Loader;
 import javafx.collections.FXCollections;
@@ -10,10 +11,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public abstract class LoaderImpl implements Loader {
 
@@ -47,6 +51,15 @@ public abstract class LoaderImpl implements Loader {
 
     protected abstract void validate(TableView<FileEntry> table, Label status);
     protected abstract Collection<FileEntry> getProjectList() throws IOException;
+    protected Collection<FileEntry> convertFileToFileEntry(Collection<File> files) {
+        return files.stream()
+                .map(file -> new FileEntry(file.getName(),
+                        humanReadableByteCount(file.getSize() == null ? 0 : file.getSize()),
+                        fmt.format(Instant.ofEpochMilli(file.getModifiedTime() == null ? 0 : file.getModifiedTime().getValue())
+                        )
+                ))
+                .toList();
+    }
 
     protected static String humanReadableByteCount(long bytes) {
         if (bytes < 1024) return bytes + " B";
