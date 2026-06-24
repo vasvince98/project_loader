@@ -11,7 +11,7 @@ import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.model.File;
 import com.google.api.services.drive.model.FileList;
-import com.vasvince.project_loader.Project;
+import com.vasvince.project_loader.Folder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -90,10 +90,10 @@ public class DriveService {
         return files;
     }
 
-    public void downloadProject(Project project, Path path) throws IOException {
-        var targetDir = Path.of(String.valueOf(path), project.getName());
+    public void downloadProject(Folder folder, Path path) throws IOException {
+        var targetDir = Path.of(String.valueOf(path), folder.getName());
         logger.info("Target dir: {}", targetDir);
-        downloadFolder(project.getId(), targetDir);
+        downloadFolder(folder.getId(), targetDir);
     }
 
     private void downloadFolder(String folderId, Path localPath) throws IOException {

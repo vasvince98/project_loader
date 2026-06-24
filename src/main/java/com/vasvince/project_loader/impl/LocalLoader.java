@@ -1,6 +1,6 @@
 package com.vasvince.project_loader.impl;
 
-import com.vasvince.project_loader.Project;
+import com.vasvince.project_loader.Folder;
 import javafx.collections.FXCollections;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
@@ -14,14 +14,14 @@ import java.util.stream.Stream;
 
 import static com.vasvince.project_loader.enums.LoaderEnums.UNINITIALIZED_ID;
 
-public class LocalLoader extends LoaderImpl<Project> {
+public class LocalLoader extends LoaderImpl<Folder> {
 
     public LocalLoader(Path path) {
         super(path);
     }
 
     @Override
-    protected void validate(TableView<Project> table, Label status) {
+    protected void validate(TableView<Folder> table, Label status) {
         if (!Files.exists(path) || !Files.isDirectory(path)) {
             status.setText("Invalid directory: " + path);
             table.setItems(FXCollections.observableArrayList());
@@ -29,7 +29,7 @@ public class LocalLoader extends LoaderImpl<Project> {
     }
 
     @Override
-    protected Collection<Project> getProjectList() throws IOException {
+    protected Collection<Folder> getProjectList() throws IOException {
         try (Stream<Path> stream = Files.list(path)) {
             return stream
                     .filter(Files::isDirectory)
@@ -48,9 +48,9 @@ public class LocalLoader extends LoaderImpl<Project> {
 
                             String sizeStr = humanReadableByteCount(size);
                             String mod = fmt.format(Instant.ofEpochMilli(Files.getLastModifiedTime(pth).toMillis()));
-                            return new Project(UNINITIALIZED_ID, name, sizeStr, pth);
+                            return new Folder(UNINITIALIZED_ID, name, sizeStr, pth);
                         } catch (IOException e) {
-                            return new Project(UNINITIALIZED_ID, pth.getFileName().toString(), "?", pth);
+                            return new Folder(UNINITIALIZED_ID, pth.getFileName().toString(), "?", pth);
                         }
                     })
                     .sorted((a, b) -> a.getName().compareToIgnoreCase(b.getName()))

@@ -1,8 +1,8 @@
 package com.vasvince.project_loader.api;
 
-import com.vasvince.project_loader.Project;
+import com.vasvince.project_loader.Folder;
 
 public interface Manager {
-    void archive(Project project);
-    void download(Project project);
+    void archive(Folder folder);
+    void download(Folder folder);
 }

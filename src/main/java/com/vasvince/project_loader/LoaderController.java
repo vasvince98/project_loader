@@ -31,14 +31,14 @@ public class LoaderController {
     private CloudLoader cloudLoader;
 
 
-    @FXML private TableView<Project> localFileTable;
-    @FXML private TableColumn<Project, String> localNameCol;
-    @FXML private TableColumn<Project, String> localSizeCol;
+    @FXML private TableView<Folder> localFileTable;
+    @FXML private TableColumn<Folder, String> localNameCol;
+    @FXML private TableColumn<Folder, String> localSizeCol;
     @FXML private Label localStatusLabel;
 
-    @FXML private TableView<Project> cloudFileTable;
-    @FXML private TableColumn<Project, String> nameCol2;
-    @FXML private TableColumn<Project, String> sizeCol2;
+    @FXML private TableView<Folder> cloudFileTable;
+    @FXML private TableColumn<Folder, String> nameCol2;
+    @FXML private TableColumn<Folder, String> sizeCol2;
     @FXML private Label cloudStatusLabel;
 
     @FXML
@@ -64,12 +64,12 @@ public class LoaderController {
         localNameCol.setCellValueFactory(c -> c.getValue().nameProperty());
         localSizeCol.setCellValueFactory(c -> c.getValue().sizeProperty());
 
-        // double-click row to open directory
+
         localFileTable.setRowFactory(tv -> {
-            TableRow<Project> row = new TableRow<>();
+            TableRow<Folder> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
                 if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2 && !row.isEmpty()) {
-                    Project item = row.getItem();
+                    Folder item = row.getItem();
                     if (item.isDirectory()) {
                         populateLocalTable(item.getPath());
                     }
@@ -128,13 +128,13 @@ public class LoaderController {
     @FXML
     private void onActionButtonClicked() {
         Manager managerService = new ManagerService(cloudLoader);
-        Project selectedProject;
+        Folder selectedFolder;
         if (selectionSource == SelectionSource.LOCAL) {
-            selectedProject = localFileTable.getSelectionModel().getSelectedItem();
-            managerService.archive(selectedProject);
+            selectedFolder = localFileTable.getSelectionModel().getSelectedItem();
+            managerService.archive(selectedFolder);
         } else if (selectionSource == SelectionSource.CLOUD) {
-            selectedProject = cloudFileTable.getSelectionModel().getSelectedItem();
-            managerService.download(selectedProject);
+            selectedFolder = cloudFileTable.getSelectionModel().getSelectedItem();
+            managerService.download(selectedFolder);
         }
         refreshListing();
     }
@@ -150,27 +150,27 @@ public class LoaderController {
             currentLocalPath = real;
             localStatusLabel.setText(real.toString());
 
-            ObservableList<Project> items = FXCollections.observableArrayList();
+            ObservableList<Folder> items = FXCollections.observableArrayList();
 
             // Add parent entry if parent exists
             Path parent = real.getParent();
             System.out.println("Parent: " + parent.toString());
             if (parent != null) {
                 // create a synthetic FileItem representing ".."
-                Project up = new Project("back", "..", "size", parent);
+                Folder up = new Folder("back", "..", "size", parent);
                 items.add(up);
             }
 
             try (Stream<Path> stream = Files.list(real)) {
                 stream.sorted(Comparator.comparing((Path p) -> !Files.isDirectory(p))
                                 .thenComparing(p -> p.getFileName().toString(), String.CASE_INSENSITIVE_ORDER))
-                        .forEach(p -> items.add(new Project("id", p.getFileName().toString(), getFileSize(p), p)));
+                        .forEach(p -> items.add(new Folder("id", p.getFileName().toString(), getFileSize(p), p)));
             }
 
             localFileTable.setItems(items);
 
         } catch (IOException e) {
-            // on error, show alert and do not change current path
+            //TODO: use this alert method for own exception handling
             Alert a = new Alert(Alert.AlertType.ERROR, "Cannot open folder: " + e.getMessage(), ButtonType.OK);
             a.showAndWait();
         }

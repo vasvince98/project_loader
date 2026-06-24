@@ -7,7 +7,7 @@ import javafx.beans.property.SimpleStringProperty;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-public class Project {
+public class Folder {
 
     private final Path path;
     private final SimpleStringProperty id;
@@ -17,7 +17,7 @@ public class Project {
 
 
 
-    public Project(String id, String name, String size, Path path) {
+    public Folder(String id, String name, String size, Path path) {
         this.id = new SimpleStringProperty(id);
         this.name = new ReadOnlyStringWrapper(name);
         this.size = new SimpleStringProperty(size);

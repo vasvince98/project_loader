@@ -1,6 +1,6 @@
 package com.vasvince.project_loader.services;
 
-import com.vasvince.project_loader.Project;
+import com.vasvince.project_loader.Folder;
 import com.vasvince.project_loader.api.Manager;
 import com.vasvince.project_loader.impl.CloudLoader;
 import org.slf4j.Logger;
@@ -24,18 +24,18 @@ public class ManagerService implements Manager {
     }
 
     @Override
-    public void archive(Project project) {
+    public void archive(Folder folder) {
 
     }
 
     @Override
-    public void download(Project project) {
-        logger.info("Downloading project: {}...", project.getName());
+    public void download(Folder folder) {
+        logger.info("Downloading project: {}...", folder.getName());
         try {
-            cloudLoader.getDriveService().downloadProject(project, Path.of(LOGIC_WORK_DIR));
-            logger.info("Successfully downloaded project: {}", project.getName());
+            cloudLoader.getDriveService().downloadProject(folder, Path.of(LOGIC_WORK_DIR));
+            logger.info("Successfully downloaded project: {}", folder.getName());
         } catch (IOException e) {
-            logger.error("Something went wrong during downloading project: {}", project.getName());
+            logger.error("Something went wrong during downloading project: {}", folder.getName());
         }
     }
 }
