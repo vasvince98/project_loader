@@ -48,9 +48,9 @@ public class LocalLoader extends LoaderImpl<Project> {
 
                             String sizeStr = humanReadableByteCount(size);
                             String mod = fmt.format(Instant.ofEpochMilli(Files.getLastModifiedTime(pth).toMillis()));
-                            return new Project(UNINITIALIZED_ID, name, sizeStr, mod);
+                            return new Project(UNINITIALIZED_ID, name, sizeStr, pth);
                         } catch (IOException e) {
-                            return new Project(UNINITIALIZED_ID, pth.getFileName().toString(), "?", "?");
+                            return new Project(UNINITIALIZED_ID, pth.getFileName().toString(), "?", pth);
                         }
                     })
                     .sorted((a, b) -> a.getName().compareToIgnoreCase(b.getName()))

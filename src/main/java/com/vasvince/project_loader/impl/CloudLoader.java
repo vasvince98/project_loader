@@ -38,7 +38,7 @@ public class CloudLoader extends LoaderImpl<File> {
                 item.getId(),
                 item.getName(),
                 humanReadableByteCount(item.getSize() == null ? 0 : item.getSize()),
-                item.getModifiedTime() == null ? "EMPTY" : fmt.format(Instant.ofEpochMilli(item.getModifiedTime().getValue()))
+                Path.of("CLOUD")
         );
     }
 

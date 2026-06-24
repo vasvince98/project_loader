@@ -27,7 +27,6 @@
                 <columns>
                     <TableColumn fx:id="localNameCol" text="Name" prefWidth="280.0"/>
                     <TableColumn fx:id="localSizeCol" text="Size" prefWidth="120.0"/>
-                    <TableColumn fx:id="localModifiedCol" text="Modified" prefWidth="200.0"/>
                 </columns>
             </TableView>
         </VBox>
@@ -38,7 +37,6 @@
                 <columns>
                     <TableColumn fx:id="nameCol2" text="Name" prefWidth="280.0"/>
                     <TableColumn fx:id="sizeCol2" text="Size" prefWidth="120.0"/>
-                    <TableColumn fx:id="modifiedCol2" text="Modified" prefWidth="200.0"/>
                 </columns>
             </TableView>
         </VBox>
