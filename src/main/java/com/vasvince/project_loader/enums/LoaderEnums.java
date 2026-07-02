@@ -11,4 +11,5 @@ public final class LoaderEnums {
     public static final String DISABLED_BUTTON_TEXT = "CHOOSE A PROJECT";
     public static final String UNINITIALIZED_ID = "UNINITIALIZED";
     public static final String LOGIC_WORK_DIR = "/Users/vasvince/Music/Logic_test";
+    public static final String LOGIC_EXTENSION = ".logicx";
 }
