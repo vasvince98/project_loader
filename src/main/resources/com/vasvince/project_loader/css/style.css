@@ -1,0 +1,7 @@
+.table-row-cell.logic-project {
+    -fx-background-color: lightgreen;
+}
+
+.table-row-cell.logic-project:selected {
+    -fx-background-color: #4CAF50;
+}

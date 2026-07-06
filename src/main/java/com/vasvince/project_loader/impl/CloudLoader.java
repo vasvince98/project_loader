@@ -25,7 +25,7 @@ public class CloudLoader extends LoaderImpl<File> {
     }
 
     @Override
-    protected Collection<Folder> getProjectList() throws IOException {
+    protected Collection<Folder> getFolderList() throws IOException {
         List<File> files;
         files = driveService.getFilesFromDrive();
         return convert(files);

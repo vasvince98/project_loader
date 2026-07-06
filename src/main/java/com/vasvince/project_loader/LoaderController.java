@@ -43,7 +43,6 @@ public class LoaderController {
     private LocalLoader localLoader;
     private CloudLoader cloudLoader;
     private final LoaderActions loaderActions = new LoaderActions();
-    private final NavigationActions navigationActions = new NavigationActions();
     private final MainActions mainActions = new MainActions();
 
     private SelectionSource selectionSource = SelectionSource.NONE;
@@ -61,18 +60,8 @@ public class LoaderController {
         localSizeCol.setCellValueFactory(c -> c.getValue().sizeProperty());
 
 
-        localFileTable.setRowFactory(tv -> {
-            TableRow<Folder> row = new TableRow<>();
-            row.setOnMouseClicked(event -> {
-                if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2 && !row.isEmpty()) {
-                    Folder item = row.getItem();
-                    if (item.isDirectory()) {
-                        navigationActions.populateLocalTable(item.getPath(), localStatusLabel, localFileTable);
-                    }
-                }
-            });
-            return row;
-        });
+        mainActions.initRowFactory(localFileTable, localStatusLabel);
+
 
         nameCol2.setCellValueFactory(c -> c.getValue().nameProperty());
         sizeCol2.setCellValueFactory(c -> c.getValue().sizeProperty());

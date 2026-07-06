@@ -10,7 +10,8 @@
 <?import javafx.scene.layout.VBox?>
 
 <VBox alignment="CENTER" spacing="6.0" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.vasvince.project_loader.LoaderController">
+      fx:controller="com.vasvince.project_loader.LoaderController"
+      stylesheets="@css/style.css">
     <padding>
         <Insets bottom="8.0" left="8.0" right="8.0" top="8.0"/>
     </padding>

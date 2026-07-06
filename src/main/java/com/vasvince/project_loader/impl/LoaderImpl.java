@@ -33,7 +33,7 @@ public abstract class LoaderImpl<T> implements Loader {
         validate(table, status);
         Collection<Folder> list;
         try {
-            list = getProjectList();
+            list = getFolderList();
         } catch (IOException e) {
             logger.info("Exception occurred during project listing: \n {}", e.getLocalizedMessage());
             list = List.of();
@@ -45,7 +45,7 @@ public abstract class LoaderImpl<T> implements Loader {
     }
 
     protected abstract void validate(TableView<Folder> table, Label status);
-    protected abstract Collection<Folder> getProjectList() throws IOException;
+    protected abstract Collection<Folder> getFolderList() throws IOException;
     protected Collection<Folder> convert(Collection<T> items) {
         return items.stream()
                 .map(this::convertItem)

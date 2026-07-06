@@ -29,7 +29,7 @@ public class LocalLoader extends LoaderImpl<Folder> {
     }
 
     @Override
-    protected Collection<Folder> getProjectList() throws IOException {
+    protected Collection<Folder> getFolderList() throws IOException {
         try (Stream<Path> stream = Files.list(path)) {
             return stream
                     .filter(Files::isDirectory)
@@ -47,7 +47,6 @@ public class LocalLoader extends LoaderImpl<Folder> {
                             }
 
                             String sizeStr = humanReadableByteCount(size);
-                            String mod = fmt.format(Instant.ofEpochMilli(Files.getLastModifiedTime(pth).toMillis()));
                             return new Folder(UNINITIALIZED_ID, name, sizeStr, pth);
                         } catch (IOException e) {
                             return new Folder(UNINITIALIZED_ID, pth.getFileName().toString(), "?", pth);
