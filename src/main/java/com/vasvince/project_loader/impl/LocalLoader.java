@@ -1,6 +1,7 @@
 package com.vasvince.project_loader.impl;
 
 import com.vasvince.project_loader.Folder;
+import com.vasvince.project_loader.exceptions.ExceptionDialog;
 import javafx.collections.FXCollections;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
@@ -60,5 +61,6 @@ public class LocalLoader extends LoaderImpl<Folder> {
     @Override
     public void execute(TableView<Folder> fileTable) {
         //TODO: implement upload
+        ExceptionDialog.show(new Throwable("Not implemented yet"));
     }
 }

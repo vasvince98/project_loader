@@ -3,6 +3,7 @@ package com.vasvince.project_loader;
 import com.vasvince.project_loader.actions.LoaderActions;
 import com.vasvince.project_loader.actions.MainActions;
 import com.vasvince.project_loader.enums.SelectionSource;
+import com.vasvince.project_loader.exceptions.LoaderException;
 import com.vasvince.project_loader.impl.CloudLoader;
 import com.vasvince.project_loader.impl.LocalLoader;
 import javafx.fxml.FXML;
@@ -106,7 +107,11 @@ public class LoaderController {
 
     @FXML
     private void onActionButtonClicked() {
-        mainActions.handleActionButton(cloudLoader, cloudFileTable);
+        switch (selectionSource) {
+            case LOCAL -> mainActions.handleActionButton(localLoader, localFileTable);
+            case CLOUD -> mainActions.handleActionButton(cloudLoader, cloudFileTable);
+            default -> throw new LoaderException("Not a valid selectionSource");
+        }
         refreshListing();
     }
 
