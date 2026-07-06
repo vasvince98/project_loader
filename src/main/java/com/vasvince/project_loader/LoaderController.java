@@ -2,19 +2,13 @@ package com.vasvince.project_loader;
 
 import com.vasvince.project_loader.actions.LoaderActions;
 import com.vasvince.project_loader.actions.MainActions;
-import com.vasvince.project_loader.actions.NavigationActions;
-import com.vasvince.project_loader.api.Manager;
 import com.vasvince.project_loader.enums.SelectionSource;
 import com.vasvince.project_loader.impl.CloudLoader;
 import com.vasvince.project_loader.impl.LocalLoader;
-import com.vasvince.project_loader.services.ManagerService;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.input.MouseButton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.nio.file.Path;
 
 import static com.vasvince.project_loader.enums.LoaderEnums.*;
 

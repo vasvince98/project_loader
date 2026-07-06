@@ -8,4 +8,6 @@ public interface Loader {
 
     void loadTo(TableView<Folder> table,
                 Label status, String source);
+
+    void execute(TableView<Folder> fileTable);
 }

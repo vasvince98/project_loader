@@ -1,30 +1,19 @@
 package com.vasvince.project_loader.actions;
 
 import com.vasvince.project_loader.Folder;
-import com.vasvince.project_loader.api.Manager;
-import com.vasvince.project_loader.enums.SelectionSource;
-import com.vasvince.project_loader.impl.CloudLoader;
-import com.vasvince.project_loader.services.ManagerService;
+import com.vasvince.project_loader.api.Loader;
 import com.vasvince.project_loader.utils.LoaderUtils;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.input.MouseButton;
 
-import java.io.File;
-import java.util.Arrays;
-
-import static com.vasvince.project_loader.enums.LoaderEnums.DEACTIVATE_BUTTON_TEXT;
-
 public class MainActions {
 
     private final NavigationActions navigationActions = new NavigationActions();
 
-    public void handleActionButton(CloudLoader cloudLoader, TableView<Folder> fileTable) {
-        Manager managerService = new ManagerService(cloudLoader);
-        Folder selectedFolder = fileTable.getSelectionModel().getSelectedItem();
-        managerService.download(selectedFolder);
+    public void handleActionButton(Loader loader, TableView<Folder> fileTable) {
+        loader.execute(fileTable);
     }
 
     public void initRowFactory(TableView<Folder> fileTable, Label statusLabel) {

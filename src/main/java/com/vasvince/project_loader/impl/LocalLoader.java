@@ -56,4 +56,9 @@ public class LocalLoader extends LoaderImpl<Folder> {
                     .toList();
         }
     }
+
+    @Override
+    public void execute(TableView<Folder> fileTable) {
+        //TODO: implement upload
+    }
 }

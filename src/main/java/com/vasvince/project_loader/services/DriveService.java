@@ -90,6 +90,10 @@ public class DriveService {
         return files;
     }
 
+    public void uploadProject(Folder folder, Path path) throws IOException {
+
+    }
+
     public void downloadProject(Folder folder, Path path) throws IOException {
         var targetDir = Path.of(String.valueOf(path), folder.getName());
         logger.info("Target dir: {}", targetDir);

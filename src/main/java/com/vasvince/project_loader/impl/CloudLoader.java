@@ -5,13 +5,19 @@ import com.vasvince.project_loader.Folder;
 import com.vasvince.project_loader.services.DriveService;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.List;
 
+import static com.vasvince.project_loader.enums.LoaderEnums.LOGIC_WORK_DIR;
+
 public class CloudLoader extends LoaderImpl<File> {
+
+    private static final Logger logger = LoggerFactory.getLogger(CloudLoader.class);
 
     private final DriveService driveService = new DriveService();
 
@@ -43,5 +49,17 @@ public class CloudLoader extends LoaderImpl<File> {
 
     public DriveService getDriveService() {
         return driveService;
+    }
+
+    @Override
+    public void execute(TableView<Folder> fileTable) {
+        Folder selectedFolder = fileTable.getSelectionModel().getSelectedItem();
+        logger.info("Downloading project: {}...", selectedFolder.getName());
+        try {
+            driveService.downloadProject(selectedFolder, Path.of(LOGIC_WORK_DIR));
+            logger.info("Successfully downloaded project: {}", selectedFolder.getName());
+        } catch (IOException e) {
+            logger.error("Something went wrong during downloading project: {}", selectedFolder.getName());
+        }
     }
 }
