@@ -6,6 +6,7 @@ import com.vasvince.project_loader.enums.SelectionSource;
 import com.vasvince.project_loader.exceptions.LoaderException;
 import com.vasvince.project_loader.impl.CloudLoader;
 import com.vasvince.project_loader.impl.LocalLoader;
+import com.vasvince.project_loader.utils.LoaderUtils;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import org.slf4j.Logger;
@@ -72,7 +73,7 @@ public class LoaderController {
                             cloudFileTable.getSelectionModel().clearSelection();
                             selectionSource = SelectionSource.LOCAL;
                             actionButton.setText(DEACTIVATE_BUTTON_TEXT);
-                            actionButton.setDisable(false);
+                            actionButton.setDisable(!LoaderUtils.isProjectFolder(newValue));
                         } else {
                             if (cloudFileTable.getSelectionModel().getSelectedItem() == null) {
                                 selectionSource = SelectionSource.NONE;
@@ -88,7 +89,7 @@ public class LoaderController {
                 localFileTable.getSelectionModel().clearSelection();
                 selectionSource = SelectionSource.CLOUD;
                 actionButton.setText(ACTIVATE_BUTTON_TEXT);
-                actionButton.setDisable(false);
+                actionButton.setDisable(!LoaderUtils.isProjectFolder(newSel));
             } else {
                 if (localFileTable.getSelectionModel().getSelectedItem() == null) {
                     selectionSource = SelectionSource.NONE;
