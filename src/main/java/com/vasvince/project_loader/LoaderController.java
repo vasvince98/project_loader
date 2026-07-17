@@ -46,6 +46,10 @@ public class LoaderController {
     public void initializeLoaders(LocalLoader localLoader, CloudLoader cloudLoader) {
         this.localLoader = localLoader;
         this.cloudLoader = cloudLoader;
+
+        mainActions.initRowFactory(localFileTable, localStatusLabel, localLoader);
+        mainActions.initRowFactory(cloudFileTable, cloudStatusLabel, cloudLoader);
+
         refreshListing();
     }
 
@@ -54,10 +58,6 @@ public class LoaderController {
         logger.info("Initializing landing page...");
         localNameCol.setCellValueFactory(c -> c.getValue().nameProperty());
         localSizeCol.setCellValueFactory(c -> c.getValue().sizeProperty());
-
-
-        mainActions.initRowFactory(localFileTable, localStatusLabel);
-        mainActions.initRowFactory(cloudFileTable, cloudStatusLabel);
 
 
         nameCol2.setCellValueFactory(c -> c.getValue().nameProperty());
