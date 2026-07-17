@@ -48,12 +48,5 @@ public class NavigationActions {
         }
     }
 
-    private String getFileSize(Path path) {
-        try {
-            return humanReadableByteCount(Files.size(path));
-        } catch (IOException e) {
-            return "0";
-        }
 
-    }
 }

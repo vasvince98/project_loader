@@ -11,7 +11,7 @@ import javafx.stage.Stage;
 import java.nio.file.Path;
 import java.util.List;
 
-import static com.vasvince.project_loader.enums.LoaderEnums.LOGIC_WORK_DIR;
+import static com.vasvince.project_loader.enums.LoaderEnums.LOCAL_LOGIC_WORK_DIR_PATH;
 
 public class LoaderApplication extends Application {
     @Override
@@ -22,8 +22,8 @@ public class LoaderApplication extends Application {
 
         List<String> args = getParameters().getRaw();
 
-        String localPath = args.isEmpty() ? LOGIC_WORK_DIR : args.get(0);
-        String cloudPath = args.size() >= 2 ? args.get(1) : LOGIC_WORK_DIR;
+        String localPath = args.isEmpty() ? LOCAL_LOGIC_WORK_DIR_PATH : args.get(0);
+        String cloudPath = args.size() >= 2 ? args.get(1) : LOCAL_LOGIC_WORK_DIR_PATH;
 
         controller.initializeLoaders(
                 new LocalLoader(Path.of(localPath)),

@@ -23,6 +23,7 @@ import java.security.GeneralSecurityException;
 import java.util.List;
 
 import static com.vasvince.project_loader.enums.DriveEnums.*;
+import static com.vasvince.project_loader.enums.LoaderEnums.CLOUD_LOGIC_WORK_DIR_NAME;
 
 public class DriveService {
 
@@ -71,8 +72,7 @@ public class DriveService {
     }
 
     public List<File> getFilesFromDrive() throws IOException {
-        //todo make it dynamic
-        String projectDriveId = getFolderId("project_loader");
+        String projectDriveId = getFolderId(CLOUD_LOGIC_WORK_DIR_NAME);
         FileList result = service.files().list()
                 .setQ("'" + projectDriveId + "' in parents and trashed=false")
                 .setFields("files(id, name, mimeType)")
@@ -88,10 +88,6 @@ public class DriveService {
             }
         }
         return files;
-    }
-
-    public void uploadProject(Folder folder, Path path) throws IOException {
-
     }
 
     public void downloadProject(Folder folder, Path path) throws IOException {

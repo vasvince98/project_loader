@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -62,5 +63,13 @@ public abstract class LoaderImpl<T> implements Loader {
         int exp = (int) (Math.log(bytes) / Math.log(1024));
         String pre = "KMGTPE".charAt(exp - 1) + "i";
         return String.format("%.1f %sB", bytes / Math.pow(1024, exp), pre);
+    }
+
+    String getFileSize(Path path) {
+        try {
+            return humanReadableByteCount(Files.size(path));
+        } catch (IOException e) {
+            return "0";
+        }
     }
 }

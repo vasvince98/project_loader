@@ -1,8 +1,12 @@
 package com.vasvince.project_loader.impl;
 
 import com.vasvince.project_loader.Folder;
+import com.vasvince.project_loader.api.NavigationActions;
 import com.vasvince.project_loader.exceptions.ExceptionDialog;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
 
@@ -11,11 +15,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Instant;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.stream.Stream;
 
 import static com.vasvince.project_loader.enums.LoaderEnums.UNINITIALIZED_ID;
 
-public class LocalLoader extends LoaderImpl<Folder> {
+public class LocalLoader extends LoaderImpl<Folder> implements NavigationActions {
 
     public LocalLoader(Path path) {
         super(path);
@@ -62,5 +67,36 @@ public class LocalLoader extends LoaderImpl<Folder> {
     public void execute(TableView<Folder> fileTable) {
         //TODO: implement upload
         ExceptionDialog.show(new Throwable("Not implemented yet"));
+    }
+
+    @Override
+    public void populateTable(Path path, Label statusLabel, TableView<Folder> fileTable) {
+        try {
+            Path real = path.toRealPath();
+            statusLabel.setText(real.toString());
+
+            ObservableList<Folder> items = FXCollections.observableArrayList();
+
+            // Add parent entry if parent exists
+            Path parent = real.getParent();
+            if (parent != null) {
+                // create a synthetic FileItem representing ".."
+                Folder up = new Folder("back", "..", "size", parent);
+                items.add(up);
+            }
+
+            try (Stream<Path> stream = Files.list(real)) {
+                stream.sorted(Comparator.comparing((Path p) -> !Files.isDirectory(p))
+                                .thenComparing(p -> p.getFileName().toString(), String.CASE_INSENSITIVE_ORDER))
+                        .forEach(p -> items.add(new Folder("id", p.getFileName().toString(), getFileSize(p), p)));
+            }
+
+            fileTable.setItems(items);
+
+        } catch (IOException e) {
+            //TODO: use this alert method for own exception handling
+            Alert a = new Alert(Alert.AlertType.ERROR, "Cannot open folder: " + e.getMessage(), ButtonType.OK);
+            a.showAndWait();
+        }
     }
 }

@@ -10,13 +10,11 @@ import javafx.scene.input.MouseButton;
 
 public class MainActions {
 
-    private final NavigationActions navigationActions = new NavigationActions();
-
     public void handleActionButton(Loader loader, TableView<Folder> fileTable) {
         loader.execute(fileTable);
     }
 
-    public void initRowFactory(TableView<Folder> fileTable, Label statusLabel) {
+    public void initRowFactory(TableView<Folder> fileTable, Label statusLabel, Loader loader) {
         fileTable.setRowFactory(tv -> {
             TableRow<Folder> row = new TableRow<>() {
                 @Override
@@ -43,7 +41,7 @@ public class MainActions {
 
                     Folder item = row.getItem();
                     if (item.isDirectory() && !LoaderUtils.isProjectFolder(item)) {
-                        navigationActions.populateLocalTable(item.getPath(), statusLabel, fileTable);
+                        loader.populateTable(item.getPath(), statusLabel, fileTable);
                     }
                 }
             });

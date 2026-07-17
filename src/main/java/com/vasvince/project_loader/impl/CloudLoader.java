@@ -13,7 +13,7 @@ import java.nio.file.Path;
 import java.util.Collection;
 import java.util.List;
 
-import static com.vasvince.project_loader.enums.LoaderEnums.LOGIC_WORK_DIR;
+import static com.vasvince.project_loader.enums.LoaderEnums.LOCAL_LOGIC_WORK_DIR_PATH;
 
 public class CloudLoader extends LoaderImpl<File> {
 
@@ -56,10 +56,15 @@ public class CloudLoader extends LoaderImpl<File> {
         Folder selectedFolder = fileTable.getSelectionModel().getSelectedItem();
         logger.info("Downloading project: {}...", selectedFolder.getName());
         try {
-            driveService.downloadProject(selectedFolder, Path.of(LOGIC_WORK_DIR));
+            driveService.downloadProject(selectedFolder, Path.of(LOCAL_LOGIC_WORK_DIR_PATH));
             logger.info("Successfully downloaded project: {}", selectedFolder.getName());
         } catch (IOException e) {
             logger.error("Something went wrong during downloading project: {}", selectedFolder.getName());
         }
+    }
+
+    @Override
+    public void populateTable(Path path, Label statusLabel, TableView<Folder> fileTable) {
+
     }
 }

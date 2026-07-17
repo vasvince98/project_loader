@@ -57,6 +57,7 @@ public class LoaderController {
 
 
         mainActions.initRowFactory(localFileTable, localStatusLabel);
+        mainActions.initRowFactory(cloudFileTable, cloudStatusLabel);
 
 
         nameCol2.setCellValueFactory(c -> c.getValue().nameProperty());
@@ -84,19 +85,22 @@ public class LoaderController {
                     )
                 );
 
-        cloudFileTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSel, newSel) -> {
-            if (newSel != null) {
-                localFileTable.getSelectionModel().clearSelection();
-                selectionSource = SelectionSource.CLOUD;
-                actionButton.setText(ACTIVATE_BUTTON_TEXT);
-                actionButton.setDisable(!LoaderUtils.isProjectFolder(newSel));
-            } else {
-                if (localFileTable.getSelectionModel().getSelectedItem() == null) {
-                    selectionSource = SelectionSource.NONE;
-                    actionButton.setDisable(true);
-                }
-            }
-        });
+        cloudFileTable.getSelectionModel()
+                .selectedItemProperty()
+                .addListener(
+                        (observable, oldFolder, newFolder) -> {
+                            if (newFolder != null) {
+                                localFileTable.getSelectionModel().clearSelection();
+                                selectionSource = SelectionSource.CLOUD;
+                                actionButton.setText(ACTIVATE_BUTTON_TEXT);
+                                actionButton.setDisable(!LoaderUtils.isProjectFolder(newFolder));
+                            } else {
+                                if (localFileTable.getSelectionModel().getSelectedItem() == null) {
+                                    selectionSource = SelectionSource.NONE;
+                                    actionButton.setDisable(true);
+                                }
+                            }
+                        });
 
         logger.info("Landing page initialized");
     }
